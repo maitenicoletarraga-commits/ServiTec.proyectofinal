@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ServiTec — Panel de administración</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="admin">
+
+  <nav>
+    <div class="logo">Servi<span>Tec</span> <span style="font-size:0.65rem;color:#F5A623;font-weight:700;letter-spacing:0.5px;margin-left:6px;">ADMIN</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Ver sitio público</a></li>
+      <li><a href="admin.html" class="activo">Panel</a></li>
+    </ul>
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </nav>
+
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <div>
+        <h1>Panel de administración</h1>
+        <p style="color:var(--acero);font-size:0.9rem;margin-top:6px;max-width:520px;">
+          Desde aquí gestionás el negocio: reservas que llegan, precios de los servicios
+          y la información que ve el cliente en la web.
+        </p>
+      </div>
+    </div>
+
+    <div class="admin-menu" id="adminMenu">
+      <button class="admin-menu-btn active" data-section="resumen">Resumen del día</button>
+      <button class="admin-menu-btn" data-section="esperando">Esperando pago</button>
+      <button class="admin-menu-btn" data-section="comprobantes">Comprobantes (con foto)</button>
+      <button class="admin-menu-btn" data-section="reservas">Agenda (aceptadas)</button>
+      <button class="admin-menu-btn" data-section="servicios">Precios de servicios</button>
+      <button class="admin-menu-btn" data-section="finanzas">Ingresos y gastos</button>
+      <button class="admin-menu-btn" data-section="disponibilidad">Abierto / feriados</button>
+      <button class="admin-menu-btn" data-section="horarios">Datos del local</button>
+    </div>
+
+    <!-- RESUMEN -->
+    <div class="admin-section-panel" id="sec-resumen">
+      <div class="admin-cards">
+        <div class="admin-card">
+          <div class="admin-card-num" id="statPendientes">—</div>
+          <div class="admin-card-lbl">Pendientes de confirmar</div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card-num" id="statHoy">—</div>
+          <div class="admin-card-lbl">Reservas para hoy</div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card-num" id="statTotal">—</div>
+          <div class="admin-card-lbl">Total registradas</div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card-num" id="statServicios">—</div>
+          <div class="admin-card-lbl">Servicios activos</div>
+        </div>
+      </div>
+      <div class="admin-section" style="margin-top:1.5rem;">
+        <h2>¿Qué podés hacer acá?</h2>
+        <ul style="color:var(--acero);font-size:0.9rem;line-height:1.7;padding-left:1.2rem;margin-top:0.6rem;">
+          <li><strong>Agenda (aceptadas):</strong> solo reservas cuyo pago ya fue confirmado. Acá el local atiende y puede marcar completada o cancelada.</li>
+          <li><strong>Precios de servicios:</strong> actualizar cuánto sale cada trabajo; el cliente lo ve al reservar.</li>
+          <li><strong>Datos del local:</strong> horario, dirección y teléfono para mantener la info al día.</li>
+        </ul>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:1.2rem;">
+          <button class="btn-primary" type="button" data-go-section="reservas">Ir a reservas</button>
+          <button class="btn-primary" type="button" style="background:#0B1F3A;" data-go-section="servicios">Editar precios</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESERVAS -->
+
+    
+    <div class="admin-section-panel" id="sec-esperando" style="display:none;">
+      <div class="admin-section">
+        <h2>Reservas esperando pago</h2>
+        <p style="font-size:0.88rem;color:var(--acero);margin-bottom:1rem;">
+          El cliente ya eligió fecha y horario, pero todavía <strong>no envió la foto del comprobante</strong>.
+        </p>
+        <div style="overflow-x:auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Servicio</th>
+                <th>Fecha / horario</th>
+                <th>Monto</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="adminEsperandoBody">
+              <tr><td colspan="5" style="color:var(--acero);">Nadie esperando pago por ahora.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-section-panel" id="sec-comprobantes" style="display:none;">
+      <div class="admin-section">
+        <h2>Comprobantes por revisar</h2>
+        <p style="font-size:0.88rem;color:var(--acero);margin-bottom:1rem;">El cliente ya pagó y subió la <strong>foto</strong>. Si confirmás el pago → pasa a <strong>Agenda (aceptadas)</strong> y el cliente ve CONFIRMADA.</p>
+        <div style="overflow-x:auto;">
+          <table class="admin-table">
+            <thead><tr><th>Cliente</th><th>Servicio / fecha</th><th>Comprobante</th><th>Monto</th><th>Acción</th></tr></thead>
+            <tbody id="adminComprobantesBody"><tr><td colspan="5">Sin comprobantes pendientes.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-section-panel" id="sec-reservas" style="display:none;">
+      <div class="admin-section">
+        <h2>Agenda — reservas con pago aceptado</h2>
+        <p style="font-size:0.88rem;color:var(--acero);margin-bottom:1rem;line-height:1.5;">
+          Acá aparecen <strong>todas</strong> las reservas que hacen los clientes desde la web.
+          Las nuevas llegan como <strong>pendiente</strong>. Cuando coordinás con el cliente,
+          cambiá el estado a confirmada o completada.
+        </p>
+        <div style="overflow-x:auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Cliente / contacto</th>
+                <th>Servicio</th>
+                <th>Fecha / Hora</th>
+                <th>Problema</th>
+                <th>Estado</th>
+                <th>Cambiar</th>
+              </tr>
+            </thead>
+            <tbody id="adminReservasBody">
+              <tr><td colspan="6" style="color:var(--acero);">Todavía no hay reservas. Cuando un cliente reserve, aparecerán aquí.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRECIOS -->
+    <div class="admin-section-panel" id="sec-servicios" style="display:none;">
+      <div class="admin-section">
+        <h2>Precios de servicios</h2>
+        <p style="font-size:0.88rem;color:var(--acero);margin-bottom:1rem;line-height:1.5;">
+          Estos montos se muestran al cliente cuando elige el servicio en “Reservas”
+          (precio estimado “desde”). Cambiá el número y tocá <strong>Guardar</strong>.
+        </p>
+        <div style="overflow-x:auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Servicio</th>
+                <th>Precio desde (Bs.)</th>
+                <th>Activo</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="adminServiciosBody">
+              <tr><td colspan="4" style="color:var(--acero);">Cargá Supabase para editar precios, o esperá un momento…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- FINANZAS -->
+    <div class="admin-section-panel" id="sec-finanzas" style="display:none;">
+      <div class="admin-cards" style="margin-bottom:1.2rem;">
+        <div class="admin-card">
+          <div class="admin-card-num" id="sumIngresos" style="color:#3B6D11;">—</div>
+          <div class="admin-card-lbl">Total ingresos</div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card-num" id="sumGastos" style="color:#C62828;">—</div>
+          <div class="admin-card-lbl">Total gastos</div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card-num" id="sumBalance">—</div>
+          <div class="admin-card-lbl">Balance</div>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <h2>Registrar movimiento</h2>
+        <p style="font-size:0.88rem;color:var(--acero);margin-bottom:1rem;line-height:1.5;">
+          Anotá lo que <strong>entra</strong> (cobros, reservas pagadas) y lo que <strong>sale</strong>
+          (placas, LEDs, pasta térmica, herramientas, etc.). Así el negocio tiene control de gastos.
+        </p>
+        <form id="formMovimiento">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tipo</label>
+              <select id="movTipo" required>
+                <option value="">— Seleccioná —</option>
+                <option value="ingreso">Ingreso</option>
+                <option value="gasto">Gasto</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Monto (Bs.)</label>
+              <input type="number" id="movMonto" step="0.01" min="0.01" placeholder="0.00" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Concepto</label>
+            <input type="text" id="movConcepto" placeholder="Ej: Compra de LEDs / Pago reserva Juan" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fecha</label>
+              <input type="date" id="movFecha" />
+            </div>
+            <div class="form-group">
+              <label>Notas (opcional)</label>
+              <input type="text" id="movNotas" placeholder="Detalle extra" />
+            </div>
+          </div>
+          <button type="submit" class="form-submit" style="max-width:280px;">Guardar movimiento</button>
+        </form>
+      </div>
+
+      <div class="admin-section">
+        <h2>Historial de movimientos</h2>
+        <div style="overflow-x:auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Concepto</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="adminMovimientosBody">
+              <tr><td colspan="5" style="color:var(--acero);">Sin movimientos todavía.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATOS LOCAL -->
+
+    <div class="admin-section-panel" id="sec-disponibilidad" style="display:none;">
+      <div class="admin-section">
+        <h2>Estado del local</h2>
+        <div class="form-group">
+          <label>Local abierto o cerrado</label>
+          <select id="cfgAbierto">
+            <option value="true">Abierto — se puede reservar</option>
+            <option value="false">Cerrado — no se aceptan reservas</option>
+          </select>
+        </div>
+      </div>
+      <div class="admin-section">
+        <h2>Días hábiles</h2>
+        <div id="cfgDias" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.5rem;">
+          <label><input type="checkbox" value="1" class="cfg-dia" /> Lunes</label>
+          <label><input type="checkbox" value="2" class="cfg-dia" /> Martes</label>
+          <label><input type="checkbox" value="3" class="cfg-dia" /> Miércoles</label>
+          <label><input type="checkbox" value="4" class="cfg-dia" /> Jueves</label>
+          <label><input type="checkbox" value="5" class="cfg-dia" /> Viernes</label>
+          <label><input type="checkbox" value="6" class="cfg-dia" /> Sábado</label>
+          <label><input type="checkbox" value="0" class="cfg-dia" /> Domingo</label>
+        </div>
+      </div>
+      <div class="admin-section">
+        <h2>Feriados (AAAA-MM-DD separados por coma)</h2>
+        <div class="form-group">
+          <textarea id="cfgFeriados" rows="3" placeholder="2026-01-01, 2026-05-01"></textarea>
+        </div>
+        <button type="button" class="form-submit" id="btnGuardarDisponibilidad" style="max-width:280px;">Guardar disponibilidad</button>
+      </div>
+    </div>
+
+    <div class="admin-section-panel" id="sec-horarios" style="display:none;">
+      <div class="admin-section">
+        <h2>Datos del local</h2>
+        <p style="font-size:0.88rem;color:var(--acero);margin-bottom:1rem;line-height:1.5;">
+          Información de referencia del negocio. Guardala para tenerla ordenada
+          (horario, dirección y teléfono de atención).
+        </p>
+        <div class="form-group">
+          <label>Horario de atención</label>
+          <textarea id="adminHorario" rows="3">Lunes a Viernes: 8:00 – 19:00
+Sábado: 8:00 – 14:00
+Domingo: cerrado</textarea>
+        </div>
+        <div class="form-group">
+          <label>Dirección</label>
+          <input type="text" id="adminDireccion" value="Colegio Juana Azurduy de Padilla, Satélite Norte" />
+        </div>
+        <div class="form-group">
+          <label>Teléfono / WhatsApp</label>
+          <input type="text" id="adminTelefono" value="+591 78118558" />
+        </div>
+        <div class="form-group">
+          <label>Aviso para clientes (se muestra en la página de Reservas)</label>
+          <textarea id="adminNota" rows="2" placeholder="Ej: Traer cargador y contraseña del equipo"></textarea>
+          <p class="form-nota" style="text-align:left;">Este texto lo ven los clientes cuando van a reservar. Úsalo para indicaciones del local.</p>
+        </div>
+        <button class="btn-primary" type="button" id="btnGuardarInfo">Guardar datos del local</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">Servi<span>Tec</span></div>
+    <div class="footer-info">Panel privado — solo para la cuenta administradora del negocio</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabaseClient.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

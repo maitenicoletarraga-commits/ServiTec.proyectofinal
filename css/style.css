@@ -1,0 +1,1406 @@
+/* =====================================================
+   SERVITEC - Estilos principales (style.css)
+   -----------------------------------------------------
+   Este archivo contiene TODO el diseño visual del proyecto.
+   Regla del profesor: un solo archivo CSS (sin frameworks).
+
+   Organización del archivo:
+   1. Reset y variables de color
+   2. Navbar (barra de navegación)
+   3. Hero (sección principal de inicio)
+   4. Tracker de estados de reparación
+   5. Botones
+   6. Estadísticas
+   7. Secciones generales y títulos
+   8. Cards de servicios
+   9. Banner CTA
+   10. Formulario de reservas
+   11. Ubicación y garantías
+   12. Contacto
+   13. Footer
+   14. Toast (notificaciones)
+   15. Menú hamburguesa (móvil)
+   16. Responsive (adaptación a celular)
+   ===================================================== */
+
+
+/* =====================================================
+   1. RESET Y VARIABLES DE COLOR
+   -----------------------------------------------------
+   El reset quita los márgenes por defecto del navegador.
+   Las variables (:root) permiten cambiar colores fácil
+   desde un solo lugar.
+   ===================================================== */
+* {
+  box-sizing: border-box;   /* el padding no agranda el elemento */
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --azul: #0B1F3A;          /* color principal oscuro (navbar, hero, footer) */
+  --electrico: #1C6EF2;     /* azul brillante (botones, acentos) */
+  --acero: #6B7A8D;         /* gris para textos secundarios */
+  --amarillo: #F5A623;      /* color de acento (logo, stats) */
+  --blanco: #F5F8FC;        /* casi blanco para textos sobre fondo oscuro */
+  --fondo: #EDF2FA;         /* color de fondo general de la página */
+  --texto-medio: #7A99BB;   /* texto gris-azulado */
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--fondo);
+  color: var(--azul);
+  overflow-x: hidden;       /* evita scroll horizontal no deseado */
+  line-height: 1.5;
+}
+
+
+/* =====================================================
+   2. NAVBAR (barra de navegación superior)
+   -----------------------------------------------------
+   Se queda fija arriba (sticky) cuando el usuario hace scroll.
+   Contiene: logo, links de páginas y botón "Reservar turno".
+   ===================================================== */
+nav {
+  background: var(--azul);
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;         /* se queda pegada arriba al hacer scroll */
+  top: 0;
+  z-index: 100;             /* queda por encima de otros elementos */
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--blanco);
+}
+
+.logo span {
+  color: var(--amarillo);   /* la palabra "Tec" va en amarillo */
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: #9DB0C8;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.activo {
+  color: var(--blanco);
+}
+
+.nav-links a.activo {
+  font-weight: 600;
+  border-bottom: 2px solid var(--amarillo);  /* subrayado de la página actual */
+  padding-bottom: 2px;
+}
+
+.nav-cta {
+  background: var(--electrico);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.nav-cta:hover {
+  background: #1558c0;
+}
+
+
+/* =====================================================
+   3. HERO (sección grande de la página de inicio)
+   -----------------------------------------------------
+   Es lo primero que ve el usuario.
+   Fondo oscuro, título grande y botones de acción.
+   ===================================================== */
+.hero {
+  background: var(--azul);
+  padding: 3.5rem 1.5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Círculo decorativo de fondo (no afecta el contenido) */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -80px;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: rgba(28, 110, 242, 0.12);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  background: rgba(28, 110, 242, 0.18);
+  color: #7EB8FF;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 1.2rem;
+}
+
+.hero h1 {
+  font-weight: 800;
+  font-size: 2.2rem;
+  color: var(--blanco);
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero h1 em {
+  color: var(--amarillo);   /* la palabra "expertas" va en amarillo */
+  font-style: normal;
+}
+
+.hero-sub {
+  color: var(--texto-medio);
+  font-size: 1rem;
+  max-width: 480px;
+  margin: 0 auto 2rem;
+}
+
+
+/* =====================================================
+   4. TRACKER DE ESTADOS DE REPARACIÓN
+   -----------------------------------------------------
+   Muestra los 4 pasos: Recibido → Diagnóstico → Reparación → Entregado
+   Se anima con JavaScript en app.js
+   ===================================================== */
+.tracker {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  max-width: 560px;
+  margin: 0 auto 2rem;
+  text-align: left;
+}
+
+.tracker-label {
+  font-size: 0.7rem;
+  color: var(--texto-medio);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.steps {
+  display: flex;
+  align-items: center;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+/* Línea que conecta un paso con el siguiente */
+.step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: calc(50% + 14px);
+  right: calc(-50% + 14px);
+  height: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  z-index: 0;
+}
+
+.step.done:not(:last-child)::after {
+  background: var(--electrico);   /* línea azul cuando el paso ya pasó */
+}
+
+.step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  z-index: 1;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.step.done .step-dot {
+  background: var(--electrico);
+  color: #fff;
+}
+
+.step.active .step-dot {
+  background: var(--amarillo);
+  color: var(--azul);
+  box-shadow: 0 0 0 4px rgba(245, 166, 35, 0.25);  /* brillo alrededor del paso activo */
+}
+
+.step.idle .step-dot {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--texto-medio);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.step-name {
+  font-size: 0.65rem;
+  color: var(--texto-medio);
+  margin-top: 6px;
+  text-align: center;
+}
+
+.step.active .step-name {
+  color: var(--amarillo);
+}
+
+.step.done .step-name {
+  color: #9DB0C8;
+}
+
+
+/* =====================================================
+   5. BOTONES
+   -----------------------------------------------------
+   btn-primary  → botón azul principal
+   btn-secondary → botón transparente con borde
+   ===================================================== */
+.hero-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: var(--electrico);
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 7px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #1558c0;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--blanco);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 28px;
+  border-radius: 7px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: border-color 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+
+/* =====================================================
+   6. ESTADÍSTICAS (franja amarilla)
+   -----------------------------------------------------
+   Muestra números grandes: equipos reparados, satisfacción, etc.
+   ===================================================== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--amarillo);
+  padding: 1.4rem 1.5rem;
+}
+
+.stat {
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.stat-num {
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: var(--azul);
+}
+
+.stat-lbl {
+  font-size: 0.75rem;
+  color: #6B4E12;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.stat:not(:last-child) {
+  border-right: 1px solid rgba(11, 31, 58, 0.15);
+}
+
+
+/* =====================================================
+   7. SECCIONES GENERALES Y TÍTULOS
+   -----------------------------------------------------
+   Clases reutilizables en todas las páginas.
+   ===================================================== */
+.section {
+  padding: 3rem 1.5rem;
+}
+
+.section-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--electrico);
+  margin-bottom: 0.6rem;
+}
+
+.section-title {
+  font-weight: 800;
+  font-size: 1.7rem;
+  color: var(--azul);
+  margin-bottom: 0.5rem;
+}
+
+.section-sub {
+  color: var(--acero);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+/* Encabezado de las páginas interiores (Información, Reservas, etc.) */
+.page-header {
+  background: var(--azul);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.page-titulo {
+  font-weight: 800;
+  font-size: 2rem;
+  color: var(--blanco);
+  margin-bottom: 0.5rem;
+}
+
+.page-sub {
+  color: var(--texto-medio);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+
+/* =====================================================
+   8. CARDS DE SERVICIOS
+   -----------------------------------------------------
+   Las tarjetas blancas que muestran cada servicio
+   (Reparación de PC, Laptops, etc.)
+   ===================================================== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.4rem 1.2rem;
+  border: 0.5px solid #D8E2F0;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);          /* se eleva un poco al pasar el mouse */
+  border-color: var(--electrico);
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--fondo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  color: var(--electrico);
+}
+
+.card h3 {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--azul);
+  margin-bottom: 0.4rem;
+}
+
+.card p {
+  font-size: 0.82rem;
+  color: var(--acero);
+  line-height: 1.5;
+}
+
+.card-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-top: 0.8rem;
+}
+
+.badge-azul  { background: #E6F1FB; color: #185FA5; }
+.badge-verde { background: #EAF3DE; color: #3B6D11; }
+.badge-ambar { background: #FAEEDA; color: #854F0B; }
+
+
+/* =====================================================
+   9. BANNER CTA (llamado a la acción)
+   -----------------------------------------------------
+   Franja azul que invita a reservar turno.
+   ===================================================== */
+.cta-banner {
+  background: var(--electrico);
+  padding: 2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cta-titulo {
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.cta-sub {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 3px;
+}
+
+
+/* =====================================================
+   10. FORMULARIO DE RESERVAS
+   -----------------------------------------------------
+   Estilos de los inputs, selects y botón de envío.
+   ===================================================== */
+.form-section {
+  background: #fff;
+  padding: 3rem 1.5rem;
+}
+
+.form-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* dos columnas en escritorio */
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--azul);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 9px 13px;
+  border: 1px solid #D8E2F0;
+  border-radius: 7px;
+  color: var(--azul);
+  outline: none;
+  transition: border-color 0.2s;
+  background: #F5F8FC;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--electrico);   /* borde azul al hacer foco */
+  background: #fff;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.form-submit {
+  width: 100%;
+  background: var(--electrico);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 7px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.form-submit:hover {
+  background: #1558c0;
+}
+
+.form-submit:disabled {
+  background: #9DB0C8;
+  cursor: not-allowed;
+}
+
+.form-nota {
+  font-size: 0.75rem;
+  color: var(--acero);
+  text-align: center;
+  margin-top: 0.8rem;
+}
+
+
+/* =====================================================
+   11. UBICACIÓN Y GARANTÍAS
+   -----------------------------------------------------
+   Grillas de tarjetas usadas en Ubicación e Información.
+   ===================================================== */
+.ubicacion-grid,
+.garantias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.ubic-card,
+.garantia-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.4rem;
+  border: 0.5px solid #D8E2F0;
+}
+
+.ubic-card h4,
+.garantia-item h4 {
+  font-weight: 700;
+  color: var(--azul);
+  font-size: 0.95rem;
+  margin: 0.4rem 0 0.3rem;
+}
+
+.ubic-card p,
+.garantia-item p {
+  font-size: 0.82rem;
+  color: var(--acero);
+  line-height: 1.6;
+}
+
+.map-container {
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 0.5px solid #D8E2F0;
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 350px;
+  border: 0;
+  display: block;
+}
+
+
+/* =====================================================
+   12. PROCESO DE TRABAJO (página Información)
+   -----------------------------------------------------
+   Los 5 pasos: Traes equipo → Diagnóstico → Presupuesto → etc.
+   ===================================================== */
+.proceso {
+  background: var(--azul);
+  padding: 3rem 1.5rem;
+}
+
+.proceso .section-eyebrow {
+  color: var(--amarillo);
+}
+
+.proceso .section-sub {
+  color: var(--texto-medio);
+}
+
+.pasos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.paso {
+  background: rgba(255, 255, 255, 0.05);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.2rem;
+}
+
+.paso-num {
+  font-weight: 800;
+  font-size: 2rem;
+  color: rgba(28, 110, 242, 0.35);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.paso h4 {
+  font-weight: 700;
+  color: var(--blanco);
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+}
+
+.paso p {
+  font-size: 0.78rem;
+  color: var(--texto-medio);
+  line-height: 1.5;
+}
+
+
+/* =====================================================
+   13. CONTACTO
+   -----------------------------------------------------
+   Layout de dos columnas: datos a la izquierda,
+   formulario a la derecha.
+   ===================================================== */
+.contacto-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.contacto-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.contacto-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.contacto-icono {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #E6F1FB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  color: var(--electrico);
+}
+
+.contacto-item h4 {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--azul);
+  margin-bottom: 2px;
+}
+
+.contacto-item p {
+  font-size: 0.82rem;
+  color: var(--acero);
+  line-height: 1.5;
+}
+
+.redes-titulo {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--azul);
+  margin-top: 0.5rem;
+}
+
+
+/* =====================================================
+   14. FOOTER
+   -----------------------------------------------------
+   Pie de página con logo, datos y redes sociales.
+   ===================================================== */
+footer {
+  background: var(--azul);
+  padding: 1.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-logo {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--blanco);
+}
+
+.footer-logo span {
+  color: var(--amarillo);
+}
+
+.footer-info {
+  font-size: 0.78rem;
+  color: var(--texto-medio);
+  line-height: 1.6;
+}
+
+.footer-info strong {
+  color: #9DB0C8;
+}
+
+.footer-redes {
+  display: flex;
+  gap: 10px;
+}
+
+.red-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #9DB0C8;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+}
+
+.red-btn:hover {
+  background: var(--electrico);
+  color: #fff;
+}
+
+/* Iconos SVG dentro de los botones de redes */
+.red-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+
+/* =====================================================
+   15. TOAST (notificaciones)
+   -----------------------------------------------------
+   Mensajes flotantes que aparecen abajo a la derecha.
+   Reemplazan a alert(). Se crean desde JavaScript.
+   ===================================================== */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  min-width: 280px;
+  max-width: 360px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastIn 0.35s ease;
+}
+
+.toast.success { background: #2E7D32; }   /* verde = éxito */
+.toast.error   { background: #C62828; }   /* rojo  = error */
+.toast.info    { background: var(--electrico); }
+
+@keyframes toastIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+/* =====================================================
+   16. MENÚ HAMBURGUESA (solo celular)
+   -----------------------------------------------------
+   El botón de tres líneas aparece en pantallas chicas.
+   Al hacer clic se le agrega la clase "abierto" al menú.
+   ===================================================== */
+.menu-toggle {
+  display: none;              /* oculto en escritorio */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: var(--blanco);
+}
+
+.menu-toggle svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* Cuando el menú tiene la clase "abierto" se muestra como lista vertical */
+.nav-links.abierto {
+  display: flex !important;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  background: var(--azul);
+  padding: 1rem 1.5rem 1.5rem;
+  gap: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+  z-index: 99;
+}
+
+.nav-links.abierto a {
+  font-size: 1rem;
+  padding: 0.4rem 0;
+}
+
+
+/* =====================================================
+   17. ICONOS SVG GENERALES
+   -----------------------------------------------------
+   Tamaño y color de los iconos dentro de cards y otros.
+   ===================================================== */
+.card-icon svg,
+.contacto-icono svg,
+.garantia-item svg,
+.ubic-card svg,
+.step-dot svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 0;
+}
+
+.step-dot svg {
+  width: 14px;
+  height: 14px;
+}
+
+
+/* =====================================================
+   18. RESPONSIVE (adaptación a celular)
+   -----------------------------------------------------
+   Cuando la pantalla es menor a 700px se cambian
+   varias cosas para que se vea bien en el celular.
+   ===================================================== */
+@media (max-width: 700px) {
+  .hero h1 {
+    font-size: 1.7rem;        /* título un poco más chico */
+  }
+
+  .menu-toggle {
+    display: block;           /* mostrar el botón hamburguesa */
+  }
+
+  .nav-links {
+    display: none;            /* ocultar los links normales */
+  }
+
+  .nav-cta {
+    display: none;            /* el CTA se abre desde el menú */
+  }
+
+  .stats {
+    grid-template-columns: 1fr;   /* estadísticas en una sola columna */
+  }
+
+  .stat:not(:last-child) {
+    border-right: none;
+    border-bottom: 1px solid rgba(11, 31, 58, 0.15);
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;   /* formulario en una sola columna */
+  }
+
+  .contacto-layout {
+    grid-template-columns: 1fr;   /* contacto apilado */
+  }
+
+  footer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-redes {
+    justify-content: center;
+  }
+
+  .cta-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .toast-container {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .toast {
+    min-width: auto;
+  }
+}
+
+
+/* =====================================================
+   19. MODAL DE LOGIN / REGISTRO
+   -----------------------------------------------------
+   Ventana flotante para iniciar sesión o registrarse.
+   ===================================================== */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.auth-overlay.visible {
+  display: flex;
+}
+
+.auth-modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem 1.6rem;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.25);
+  position: relative;
+}
+
+.auth-modal h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--azul);
+  margin-bottom: 0.3rem;
+}
+
+.auth-modal .auth-sub {
+  font-size: 0.85rem;
+  color: var(--acero);
+  margin-bottom: 1.4rem;
+}
+
+.auth-modal .form-group {
+  margin-bottom: 0.9rem;
+}
+
+.auth-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--acero);
+  cursor: pointer;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 0.55rem;
+  border: 1px solid #D8E2F0;
+  background: #F5F8FC;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--acero);
+}
+
+.auth-tab.active {
+  background: var(--electrico);
+  color: #fff;
+  border-color: var(--electrico);
+}
+
+.auth-switch {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--acero);
+  margin-top: 1rem;
+}
+
+.auth-switch button {
+  background: none;
+  border: none;
+  color: var(--electrico);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+/* Navbar: usuario logueado */
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #9DB0C8;
+  font-size: 0.8rem;
+}
+
+.nav-user strong {
+  color: var(--blanco);
+}
+
+.btn-logout {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #9DB0C8;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.btn-logout:hover {
+  border-color: #fff;
+  color: #fff;
+}
+
+.btn-login-nav {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: var(--blanco);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.btn-login-nav:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Bloqueo de reservas si no hay sesión */
+.auth-required-box {
+  background: #fff;
+  border: 1px solid #D8E2F0;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto;
+  box-shadow: 0 8px 32px rgba(11, 31, 58, 0.08);
+}
+
+.auth-required-box h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 0.6rem;
+  color: var(--azul);
+}
+
+.auth-required-box p {
+  color: var(--acero);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin-bottom: 0.4rem;
+}
+
+/* =====================================================
+   20. PANEL DE ADMINISTRADOR
+   ===================================================== */
+.admin-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--azul);
+}
+
+.admin-section {
+  background: #fff;
+  border: 0.5px solid #D8E2F0;
+  border-radius: 12px;
+  padding: 1.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-section h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--azul);
+  margin-bottom: 1rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid #E8EEF6;
+}
+
+.admin-table th {
+  color: var(--acero);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.admin-table input {
+  width: 100%;
+  max-width: 110px;
+  padding: 5px 8px;
+  border: 1px solid #D8E2F0;
+  border-radius: 5px;
+  font-size: 0.85rem;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-sm.save {
+  background: var(--electrico);
+  color: #fff;
+}
+
+.btn-sm.danger {
+  background: #C62828;
+  color: #fff;
+}
+
+.estado-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.estado-pendiente { background: #FAEEDA; color: #854F0B; }
+.estado-confirmada { background: #E6F1FB; color: #185FA5; }
+.estado-completada { background: #EAF3DE; color: #3B6D11; }
+.estado-cancelada { background: #FCE8E8; color: #A31B1B; }
+
+@media (max-width: 700px) {
+  .admin-table { font-size: 0.75rem; }
+  .admin-table input { max-width: 80px; }
+}
+
+/* =====================================================
+   21. ADMIN DASHBOARD (menú y tarjetas)
+   ===================================================== */
+.admin-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.admin-menu-btn {
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #D8E2F0;
+  background: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--acero);
+  cursor: pointer;
+}
+
+.admin-menu-btn.active {
+  background: var(--electrico);
+  color: #fff;
+  border-color: var(--electrico);
+}
+
+.admin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.admin-card {
+  background: #fff;
+  border: 0.5px solid #D8E2F0;
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-align: center;
+}
+
+.admin-card-num {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--electrico);
+}
+
+.admin-card-lbl {
+  font-size: 0.78rem;
+  color: var(--acero);
+  margin-top: 4px;
+}
+
+/* Precio estimado en formulario */
+.precio-estimado {
+  background: #E6F1FB;
+  color: #185FA5;
+  font-weight: 800;
+  font-size: 1.3rem;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+}
+
+/* Caja de pago / éxito */
+.pago-box {
+  background: #F5F8FC;
+  border: 1px solid #D8E2F0;
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-top: 1.2rem;
+  text-align: center;
+}
+
+.pago-titulo {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--acero);
+  font-weight: 600;
+}
+
+.pago-monto {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--azul);
+  margin: 0.3rem 0;
+}
+
+
+/* Modal auth: inputs siempre usables */
+.auth-modal {
+  pointer-events: auto;
+  z-index: 2001;
+}
+.auth-modal input,
+.auth-modal button,
+.auth-modal select {
+  pointer-events: auto;
+  position: relative;
+  z-index: 2;
+}
+.auth-overlay {
+  pointer-events: auto;
+}

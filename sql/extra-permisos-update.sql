@@ -1,0 +1,6 @@
+-- Si no se guardan precios o no se confirman reservas, ejecutá esto en SQL Editor:
+ALTER TABLE servicios DISABLE ROW LEVEL SECURITY;
+ALTER TABLE reservas DISABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles DISABLE ROW LEVEL SECURITY;
+ALTER TABLE movimientos DISABLE ROW LEVEL SECURITY;
+ALTER TABLE configuracion DISABLE ROW LEVEL SECURITY;

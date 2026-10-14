@@ -1,0 +1,12 @@
+SERVITEC - QUÉ HACER (SIMPLE)
+
+1) Abrí js/supabaseClient.js
+2) Pegá tu Project URL y tu anon key (Supabase → Settings → API)
+3) Guardá
+4) En Supabase → SQL Editor, ejecutá el contenido de sql/schema.sql
+   (si ya lo habías corrido, al menos el bloque EXTRA del final)
+5) Subí TODA esta carpeta de nuevo a GitHub (reemplazando lo anterior)
+6) Vercel se actualiza solo si ya está conectado al repo
+   (si no, Importá el repo otra vez)
+
+Listo.
